@@ -1,7 +1,15 @@
 # Note: this script creates functions to generate classifications of a charity
 # based on its charitable object
 
+# load accuracy of models
 acc_per_cat <- read_csv(here::here("./data/acc_per_cat.csv"))
+
+## load models
+final_trained_models <- list()
+
+for (i in seq(1:4)){
+  final_trained_models[[i]] <- readRDS(paste0(here::here(), "/../charity-classifier/models", "/model", i, ".rds"))
+}
 
 predict_wf <- function(this_model, data_to_predict){
   

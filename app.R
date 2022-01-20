@@ -5,16 +5,6 @@ library(textrecipes)
 
 source(here::here("./helpers.R"))
 
-## load models
-final_trained_models <- list()
-
-for (i in seq(1:4)){
-  final_trained_models[[i]] <- readRDS(paste0(here::here(), "/../models", "/model", i, ".rds"))
-}
-
-## load accuracy data
-acc_per_cat <- read_csv(here::here("./data/acc_per_cat.csv"))
-
 ## UI design
 ui <- dashboardPage(
 
@@ -104,8 +94,6 @@ server <- function(input, output) {
   })
   
 }
-
-
 
 
 shinyApp(ui, server)
