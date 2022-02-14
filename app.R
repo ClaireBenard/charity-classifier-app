@@ -54,26 +54,25 @@ ui <- dashboardPage(
       
       # Second tab content
       tabItem(tabName = "class_tool",
-              fluidRow(
-                
-                box(
-                  title = "Charitable object to classify",
-                  status = "primary", solidHeader = TRUE,
-                  textAreaInput("charity_object", "Enter charitable object", "This charity helps young adults...", width = "1000px"),
-                  actionButton('classify','Classify', icon = icon('cogs'))
-                ),
-                
-                box(title = 'Most likely activity of the organisation:',
-                    status = 'success', solidHeader = TRUE,
-                    width = 6, 
-                    div(h5("Based on its charitable object, the charity's primary activity is:")),
-                    verbatimTextOutput("value", placeholder = TRUE)
-                )
+              column(width = 8,
+                     h3("Use the charitable object to classify charities"),
+                     textAreaInput("charity_object", "Enter charitable object", 
+                                   "to promote the relief of physically disabled people in the county of surrey in such ways as the association...",
+                                   width = "100%",
+                                   rows = 3
+                     ),
+                     actionButton('classify','Classify', icon = icon('cogs'))
+                     ),
+              column(br(),
+                     width = 8,
+                     "Based on its charitable object, the charity's primary activity is:",
+                     uiOutput("spinner")
+                     )
               )
       )
     )
   )
-)
+
 
 ## Server
 server <- function(input, output) {
@@ -83,16 +82,24 @@ server <- function(input, output) {
   
   # Generate prediction
   observeEvent(input$classify, {
-    a$result <- voting_wf(data.frame(registered_charity_number = 1234,
-                          charitable_objects = input$charity_object))
+
+    output$value <- renderText({
+      a$result <- voting_wf(data.frame(registered_charity_number = 1234,
+                                       charitable_objects = input$charity_object))
+      # Display the prediction value
+      print(a$result$.pred_class)
+    })
+    
+    output$spinner <- renderUI({
+      shinycssloaders::withSpinner(textOutput("value"))
+    })
     
   })
   
-  output$value <- renderText({
-    # Display the prediction value
-    print(a$result$.pred_class)
-  })
+
   
+  
+
 }
 
 

@@ -30,7 +30,8 @@ vote <- . %>%
 
 # predict flow
 predict_wf <- function(this_model, data_to_predict){
-  
+  print("start predict")
+  print(Sys.time())
   engine <- this_model$fit$actions$model$spec$engine
   
   predict(this_model, data_to_predict) %>%
@@ -41,7 +42,8 @@ predict_wf <- function(this_model, data_to_predict){
 
 # Execute prediction and voting
 voting_wf <- function(data_to_predict){
-  
+  print("voting")
+  print(Sys.time())
   x <- data_to_predict
   list_to_predict <- list(x, x, x, x) # hacky way to create a DF of DFs
   
